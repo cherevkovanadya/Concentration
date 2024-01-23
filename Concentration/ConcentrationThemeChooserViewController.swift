@@ -9,10 +9,10 @@ import UIKit
 
 class ConcentrationThemeChooserViewController: UIViewController, UISplitViewControllerDelegate {
     
-    let themes = [
-        " Fruits ": "🍓🍇🍑🍎🍉🍋🫐🍒🍏🥭🍌🥥🍍🥝🍐🍊🍈🥑🫑🥒🌶🌽🥕🥬",
-        " Shapes&Colors ": "🔴🟡🟢🔵🟣⚫️🔶🔷🟥🟧🟩🟦🟪⬛️🟫🔺🔲🔘🟠🟤🟨♥️🔻🛑",
-        " Flags ": "🇺🇳🇦🇺🇦🇹🇦🇿🇦🇽🇦🇱🇩🇿🇦🇸🇦🇷🇧🇾🇧🇪🇧🇬🇧🇷🇧🇯🇧🇭🇧🇼🇬🇧🏴󠁧󠁢󠁥󠁮󠁧󠁿🇭🇺🇻🇳🇬🇪🇬🇭🇬🇱🇬🇹"
+    let themes: [String] = [
+        " Fruits ",
+        " Shapes&Colors ",
+        " Flags "
     ]
 
     private var splitViewDetailConcentrationViewController: ConcentrationViewController? {
@@ -75,47 +75,47 @@ class ConcentrationThemeChooserViewController: UIViewController, UISplitViewCont
         }
     }
     
-    @IBAction func chooseRandomTheme(_ sender: Any) {
-        let randomTheme = themes.values.randomElement()
-        
-        if let cvc = splitViewDetailConcentrationViewController {
-            cvc.theme = randomTheme
-        } else if let cvc = lastSeguedToConcentrationViewController {
-            cvc.theme = randomTheme
-            navigationController?.pushViewController(cvc, animated: true)
-        } else {
-            performSegue(withIdentifier: "Random Theme", sender: sender)
-        }
-    }
-    
     @IBAction func changeTheme(_ sender: Any) {
-        if let cvc = splitViewDetailConcentrationViewController {
-            if let themeName = (sender as? UIButton)?.currentTitle, let theme = themes[themeName] {
-                cvc.theme = theme
-            }
-        } else if let cvc = lastSeguedToConcentrationViewController {
-            if let themeName = (sender as? UIButton)?.currentTitle, let theme = themes[themeName] {
-                cvc.theme = theme
-            }
-            navigationController?.pushViewController(cvc, animated: true)
-        } else {
+        let themeName = (sender as? UIButton)?.currentTitle
+        if themeName == " Random " {
+            let randomTheme = themes.randomElement()
+            
+            if let cvc = splitViewDetailConcentrationViewController {
+                cvc.setTheme(themeName: randomTheme!)
+            } else if let cvc = lastSeguedToConcentrationViewController {
+                cvc.setTheme(themeName: randomTheme!)
+                navigationController?.pushViewController(cvc, animated: true)
+            } else {
                 performSegue(withIdentifier: "Choose Theme", sender: sender)
+            }
+        } else {
+            if let cvc = splitViewDetailConcentrationViewController {
+                if let themeName = (sender as? UIButton)?.currentTitle {
+                    cvc.setTheme(themeName: themeName)
+                }
+            } else if let cvc = lastSeguedToConcentrationViewController {
+                if let themeName = (sender as? UIButton)?.currentTitle {
+                    cvc.setTheme(themeName: themeName)
+                }
+                navigationController?.pushViewController(cvc, animated: true)
+            } else {
+                    performSegue(withIdentifier: "Choose Theme", sender: sender)
+            }
         }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Random Theme" {
-            let theme = themes.values.randomElement()
-            if let cvc = segue.destination as? ConcentrationViewController {
-                cvc.theme = theme
-                lastSeguedToConcentrationViewController = cvc
-            }
-        }
-        
         if segue.identifier == "Choose Theme" {
-            if let themeName = (sender as? UIButton)?.currentTitle, let theme = themes[themeName] {
+            var themeName = (sender as? UIButton)?.currentTitle
+            if themeName == " Random " {
+                themeName = themes.randomElement()
                 if let cvc = segue.destination as? ConcentrationViewController {
-                    cvc.theme = theme
+                    cvc.setTheme(themeName: themeName!)
+                    lastSeguedToConcentrationViewController = cvc
+                }
+            } else {
+                if let cvc = segue.destination as? ConcentrationViewController {
+                    cvc.setTheme(themeName: themeName!)
                     lastSeguedToConcentrationViewController = cvc
                 }
             }

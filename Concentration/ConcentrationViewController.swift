@@ -21,10 +21,9 @@ class ConcentrationViewController: UIViewController {
     
     private func updateFlipCountLabel() {
         let attributes: [NSAttributedString.Key: Any] = [
-            .strokeWidth: 5.0,
-            .strikethroughColor: #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
+            :
         ]
-        let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
+        let attributedString = NSAttributedString(string: " Flips: \(flipCount) ", attributes: attributes)
         flipCountLabel.attributedText = attributedString
     }
     
@@ -36,9 +35,9 @@ class ConcentrationViewController: UIViewController {
     
     private func updateScoreCountLabel() {
         let attributes: [NSAttributedString.Key: Any] = [
-            .strokeWidth: 5.0,
+            :
         ]
-        let attributedString = NSAttributedString(string: "Score: \(scoreCount)", attributes: attributes)
+        let attributedString = NSAttributedString(string: " Score: \(scoreCount) ", attributes: attributes)
         scoreCountLabel.attributedText = attributedString
     }
     
@@ -70,13 +69,7 @@ class ConcentrationViewController: UIViewController {
     
     private var numberOfCards = 8
     
-    var theme: String? {
-        didSet {
-            emojiChoices = theme ?? ""
-            emoji = [:]
-            updateViewFromModel()
-        }
-    }
+    private var currentTheme: Theme = FruitsTheme()
     
     var difficultyLevel: Difficulty? {
         didSet {
@@ -98,6 +91,31 @@ class ConcentrationViewController: UIViewController {
         }
     }
     
+    func setTheme(themeName: String) {
+        switch themeName {
+        case " Fruits ":
+            currentTheme = FruitsTheme()
+        case " Shapes&Colors ":
+            currentTheme = ShapesAndColorsTheme()
+        case " Flags ":
+            currentTheme = FlagsTheme()
+        default:
+            break
+        }
+        updateUIForTheme()
+    }
+    
+    func updateUIForTheme() {
+        view.backgroundColor = currentTheme.primaryColor
+        cardButtons.forEach { button in
+            button.backgroundColor = currentTheme.cardColor
+            button.layer.borderColor = currentTheme.cardBorderColor
+        }
+        restartButton.layer.backgroundColor = currentTheme.buttonsColor
+        hintButton.layer.backgroundColor = currentTheme.buttonsColor
+        shuffleCardsButton.layer.backgroundColor = currentTheme.buttonsColor
+    }
+    
     func updateNumberOfCardButtons() {
         if cardButtons != nil {
             cardButtons.removeAll()
@@ -117,7 +135,7 @@ class ConcentrationViewController: UIViewController {
                 let cardButton = UIButton()
                 cardButton.layer.cornerRadius = 8
                 cardButton.layer.borderWidth = 2
-                cardButton.layer.borderColor = #colorLiteral(red: 0.1764705926, green: 0.4980392158, blue: 0.7568627596, alpha: 1)
+                cardButton.layer.borderColor = currentTheme.cardBorderColor
                 cardButton.addTarget(self, action: #selector(touchCard(_:)), for: .touchUpInside)
                 cardButtons.append(cardButton)
                 rowCardStack.addArrangedSubview(cardButton)
@@ -127,10 +145,16 @@ class ConcentrationViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        flipCountLabel.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        scoreCountLabel.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        view.backgroundColor = currentTheme.primaryColor
         updateNumberOfCardButtons()
         for card in cardButtons {
             card.layer.cornerRadius = 8
         }
+        restartButton.layer.backgroundColor = currentTheme.buttonsColor
+        hintButton.layer.backgroundColor = currentTheme.buttonsColor
+        shuffleCardsButton.layer.backgroundColor = currentTheme.buttonsColor
         restartButton.layer.cornerRadius = 10
         hintButton.layer.cornerRadius = 10
         shuffleCardsButton.layer.cornerRadius = 10
@@ -139,11 +163,11 @@ class ConcentrationViewController: UIViewController {
     
     @IBAction private func touchRestartGame(_ sender: UIButton) {
         game = Concentration(numberOfPairsOfCards: numberOfPairesOfCards)
-        emojiChoices = theme ?? "🍓🍇🍑🍎🍉🍋🫐🍒🍏🥭🍌🥥🍍🥝🍐🍊🍈🥑🫑🥒🌶🌽🥕🥬"
+        emojiChoices = currentTheme.emojis
         flipCount = 0
         scoreCount = 0
         emoji = [:]
-        hintButton.layer.backgroundColor = #colorLiteral(red: 0.01680417731, green: 0.1983509958, blue: 1, alpha: 1)
+        hintButton.layer.backgroundColor = currentTheme.buttonsColor
         updateViewFromModel()
     }
     
@@ -158,7 +182,7 @@ class ConcentrationViewController: UIViewController {
                 timer.invalidate()
             }
         }
-        hintButton.layer.backgroundColor = #colorLiteral(red: 0.2392156869, green: 0.6745098233, blue: 0.9686274529, alpha: 1)
+        hintButton.layer.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
     }
     
     @IBAction private func touchShuffleCards(_ sender: UIButton) {
@@ -186,10 +210,10 @@ class ConcentrationViewController: UIViewController {
                     button.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
                 } else {
                     button.setTitle("", for: UIControl.State.normal)
-                    button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : #colorLiteral(red: 0, green: 0.9914394021, blue: 1, alpha: 1)
+                    button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) : currentTheme.cardColor
                 }
             }
-            scoreCountLabel.text = "Score: \(game.score)"
+            scoreCountLabel.text = " Score: \(game.score) "
         }
     }
     

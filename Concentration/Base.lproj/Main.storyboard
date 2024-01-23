@@ -28,7 +28,7 @@
                                             <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </state>
                                         <connections>
-                                            <action selector="chooseRandomTheme:" destination="SoV-nb-3Lr" eventType="touchUpInside" id="480-g1-ErY"/>
+                                            <action selector="changeTheme:" destination="SoV-nb-3Lr" eventType="touchUpInside" id="IoQ-ub-ICN"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t61-OG-KoE">
@@ -125,7 +125,6 @@
                         <outlet property="shapesAndColorsThemeButton" destination="DP9-LE-Etu" id="5RE-TH-8iX"/>
                         <segue destination="BYZ-38-t0r" kind="showDetail" identifier="Choose Theme" id="KB1-OQ-2Mp"/>
                         <segue destination="BYZ-38-t0r" kind="showDetail" identifier="Choose Difficulty" id="bDz-Sp-dLO"/>
-                        <segue destination="BYZ-38-t0r" kind="showDetail" identifier="Random Theme" id="18V-Eg-ibf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NN5-Pc-zk0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -476,7 +475,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="QLl-fM-dOu"/>
+        <segue reference="bDz-Sp-dLO"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
