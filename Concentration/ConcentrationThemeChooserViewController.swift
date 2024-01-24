@@ -32,6 +32,11 @@ class ConcentrationThemeChooserViewController: UIViewController, UISplitViewCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = currentTheme.primaryColor
+        randomThemeButton.layer.backgroundColor = currentTheme.buttonsColor
+        fruitsThemeButton.layer.backgroundColor = currentTheme.buttonsColor
+        shapesAndColorsThemeButton.layer.backgroundColor = currentTheme.buttonsColor
+        flagsThemeButton.layer.backgroundColor = currentTheme.buttonsColor
         beginnerDifficultyLevelButton.layer.cornerRadius = 10
         mediumDifficultyLevelButton.layer.cornerRadius = 10
         masterDifficultyLevelButton.layer.cornerRadius = 10
@@ -75,11 +80,18 @@ class ConcentrationThemeChooserViewController: UIViewController, UISplitViewCont
         }
     }
     
+    private func updateUIForTheme() {
+        view.backgroundColor = currentTheme.primaryColor
+        randomThemeButton.layer.backgroundColor = currentTheme.buttonsColor
+        fruitsThemeButton.layer.backgroundColor = currentTheme.buttonsColor
+        shapesAndColorsThemeButton.layer.backgroundColor = currentTheme.buttonsColor
+        flagsThemeButton.layer.backgroundColor = currentTheme.buttonsColor
+    }
+    
     @IBAction func changeTheme(_ sender: Any) {
         let themeName = (sender as? UIButton)?.currentTitle
         if themeName == " Random " {
             let randomTheme = themes.randomElement()
-            
             if let cvc = splitViewDetailConcentrationViewController {
                 cvc.setTheme(themeName: randomTheme!)
             } else if let cvc = lastSeguedToConcentrationViewController {
@@ -102,6 +114,7 @@ class ConcentrationThemeChooserViewController: UIViewController, UISplitViewCont
                     performSegue(withIdentifier: "Choose Theme", sender: sender)
             }
         }
+        updateUIForTheme()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

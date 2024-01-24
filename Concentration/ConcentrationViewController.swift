@@ -69,8 +69,6 @@ class ConcentrationViewController: UIViewController {
     
     private var numberOfCards = 8
     
-    private var currentTheme: Theme = FruitsTheme()
-    
     var difficultyLevel: Difficulty? {
         didSet {
             switch difficultyLevel {
@@ -105,7 +103,8 @@ class ConcentrationViewController: UIViewController {
         updateUIForTheme()
     }
     
-    func updateUIForTheme() {
+    private func updateUIForTheme() {
+        emojiChoices = currentTheme.emojis
         view.backgroundColor = currentTheme.primaryColor
         cardButtons.forEach { button in
             button.backgroundColor = currentTheme.cardColor
@@ -168,6 +167,7 @@ class ConcentrationViewController: UIViewController {
         scoreCount = 0
         emoji = [:]
         hintButton.layer.backgroundColor = currentTheme.buttonsColor
+        game.flipAllCardsFaceDown()
         updateViewFromModel()
     }
     
@@ -201,6 +201,7 @@ class ConcentrationViewController: UIViewController {
     }
     
     private func updateViewFromModel() {
+        emojiChoices = currentTheme.emojis
         if cardButtons != nil {
             for index in cardButtons.indices {
                 let button = cardButtons[index]
